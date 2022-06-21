@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}
+Occurences
+{% endblock %}
+
+
+{% block content %}
+<br>
+<form action="" method="POST">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="input-group mb-3">
+                    {% csrf_token %}
+                    {{ form }}
+
+                </div>
+
+                <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
+                <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
+                <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
+                <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
+                <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
+            </div>
+
+            <div class="col">
+
+            </div>
+
+        </div>
+        <input type="submit" value="Filter">
+    </div>
+</form>
+
+<div class="container-fluid">
+    {{occurrences_table|safe}}
+</div>
+
+<h4 id='details'>Occurences details</h4>
+
+<div id='msg_details_div'>
+    <table id="mmsg_details_datatable" class="table table-light table-bordered"></table>
+    <h4>History data</h4>
+    <table id="mmsg_details_history_datatable" class="table table-light"></table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+
+    $(document).ready(function () {
+       
+        console.log("ready!");
+
+        $(document).on("click", "#occurrences_table td", function(e) {
+            var col = $(this).parent().children().index($(this));
+            tail = $("#occurrences_table th")[col].innerText 
+            ataChapter = $(this).parent().children()[0].innerText 
+            fromDate = document.getElementById('id_from_date').value;
+            toDate = document.getElementById('id_to_date').value;
+            
+            $.getJSON('{% url 'occurrences_details' %}', {
+                tail: tail,
+                ataChapter: ataChapter,
+                fromDate: fromDate,
+                toDate: toDate
+            }).done(function (data) {
+                alert(data)
+            });
+       }); 
+
+        $("#3dInput").click(function () {
+            var today = new Date();
+            var d3 = new Date(today)
+            d3.setDate(today.getDate() - 3)
+            $("#id_id_to_date").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice('-2') + "-" + ("0" +
+                today.getDate()).slice('-2'));
+            $("#id_from_date").val(d3.getFullYear() + "-" + ("0" + (d3.getMonth() + 1)).slice('-2') + "-" + ("0" + d3
+                .getDate()).slice('-2'))
+        });
+        $("#1wInput").click(function () {
+            var today = new Date();
+            var w1 = new Date(today)
+            w1.setDate(today.getDate() - 7)
+            $("#id_to_date").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice('-2') + "-" + ("0" +
+                today.getDate()).slice('-2'));
+            $("#id_from_date").val(w1.getFullYear() + "-" + ("0" + (w1.getMonth() + 1)).slice('-2') + "-" + ("0" + w1
+                .getDate()).slice('-2'))
+        });
+        $("#2wInput").click(function () {
+            var today = new Date();
+            var w2 = new Date(today)
+            w2.setDate(today.getDate() - 14)
+            $("#id_to_date").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice('-2') + "-" + ("0" +
+                today.getDate()).slice('-2'));
+            $("#id_from_date").val(w2.getFullYear() + "-" + ("0" + (w2.getMonth() + 1)).slice('-2') + "-" + ("0" + w2
+                .getDate()).slice('-2'))
+        });
+        $("#1mInput").click(function () {
+            var today = new Date();
+            var m1 = new Date(today)
+            m1.setMonth(today.getMonth() - 1)
+            $("#id_to_date").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice('-2') + "-" + ("0" +
+                today.getDate()).slice('-2'));
+            $("#id_from_date").val(m1.getFullYear() + "-" + ("0" + (m1.getMonth() + 1)).slice('-2') + "-" + ("0" + m1
+                .getDate()).slice('-2'))
+        });
+        $("#3mInput").click(function () {
+            var today = new Date();
+            var m3 = new Date(today)
+            m3.setMonth(today.getMonth() - 3)
+            console.log(m3, today)
+            $("#id_to_date").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice('-2') + "-" + ("0" +
+                today.getDate()).slice('-2'));
+            $("#id_from_date").val(m3.getFullYear() + "-" + ("0" + (m3.getMonth() + 1)).slice('-2') + "-" + ("0" + m3
+                .getDate()).slice('-2'))
+        });
+    });
+
+
+</script>
+{% endblock %}
