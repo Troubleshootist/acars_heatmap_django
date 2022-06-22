@@ -14,10 +14,10 @@ class AcarsMsgRaw(models.Model):
     text = models.TextField(blank=True, null=True)
     airplane = models.CharField(max_length=10, blank=True, null=True)
     processed = models.IntegerField(blank=True, null=True)
-    plane = models.ForeignKey(
-        'Plane', on_delete=models.CASCADE, related_name='raw_messages')
+    plane = models.ForeignKey('Plane', models.DO_NOTHING)
 
     class Meta:
+        managed = False
         db_table = 'acars_msg_raw'
 
 
@@ -25,6 +25,7 @@ class Airline(models.Model):
     name = models.CharField(max_length=30)
 
     class Meta:
+        managed = False
         db_table = 'airline'
 
 
@@ -41,43 +42,47 @@ class FaultReport(models.Model):
     departing = models.CharField(max_length=9, blank=True, null=True)
     flight = models.CharField(max_length=9, blank=True, null=True)
     report_datetime = models.DateTimeField(blank=True, null=True)
-    raw = models.ForeignKey(AcarsMsgRaw, on_delete=models.CASCADE,
-                            related_name='fault_report', blank=True, null=True)
-    plane = models.ForeignKey('Plane', on_delete=models.CASCADE,
-                              related_name='fault_reports', blank=True, null=True)
+    raw = models.ForeignKey(AcarsMsgRaw, models.DO_NOTHING, blank=True, null=True)
+    plane = models.ForeignKey('Plane', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'fault_report'
 
 
 class Fde(models.Model):
     cat = models.CharField(max_length=3, blank=True, null=True)
     fde_code = models.CharField(max_length=10, blank=True, null=True)
-    plf = models.ForeignKey(
-        FaultReport, on_delete=models.CASCADE, related_name='fde_messages')
-    mmsg = models.ForeignKey('Mmsg', on_delete=models.CASCADE,
-                             related_name='fde_message', blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'fde'
+
+
+class FdeMmsg(models.Model):
+    plf = models.ForeignKey(FaultReport, models.DO_NOTHING)
+    fde = models.ForeignKey(Fde, models.DO_NOTHING, blank=True, null=True)
+    mmsg = models.ForeignKey('Mmsg', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'fde_mmsg'
 
 
 class MessageDescription(models.Model):
     mmsg = models.CharField(max_length=10)
     description = models.CharField(max_length=200, blank=True, null=True)
     ata = models.CharField(max_length=10, blank=True, null=True)
-    major_notification_name = models.CharField(
-        max_length=50, blank=True, null=True)
-    minor_notification_name = models.CharField(
-        max_length=50, blank=True, null=True)
+    major_notification_name = models.CharField(max_length=50, blank=True, null=True)
+    minor_notification_name = models.CharField(max_length=50, blank=True, null=True)
     fim_ref = models.CharField(max_length=20, blank=True, null=True)
     mel_ref = models.CharField(max_length=20, blank=True, null=True)
     criteria = models.CharField(max_length=200, blank=True, null=True)
     tbs_program = models.CharField(max_length=200, blank=True, null=True)
-    plane_type = models.ForeignKey('PlaneType', on_delete=models.CASCADE,
-                                   related_name='message_descriptions', blank=True, null=True)
+    type = models.ForeignKey('PlaneType', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'message_description'
 
 
@@ -87,38 +92,22 @@ class Mmsg(models.Model):
     chapter = models.CharField(max_length=3, blank=True, null=True)
     section = models.CharField(max_length=3, blank=True, null=True)
     equip_number = models.CharField(max_length=20, blank=True, null=True)
-    plf = models.ForeignKey(
-        FaultReport, on_delete=models.CASCADE, related_name='plf')
-
-    fde = models.ForeignKey(
-        Fde, on_delete=models.CASCADE, related_name='mmsgs')
     defect_status = models.CharField(max_length=10, blank=True, null=True)
     defect_ref = models.CharField(max_length=20, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'mmsg'
-
-
-# class FdeMmsg(models.Model):
-#     plf = models.ForeignKey(FaultReport, models.CASCADE, related_name='plf')
-#     fde = models.ForeignKey(Fde, models.CASCADE,
-#                             blank=True, null=True, related_name='fde')
-#     mmsg = models.ForeignKey(Mmsg, models.CASCADE,
-#                              blank=True, null=True, related_name='mmsg')
-
-#     class Meta:
-#         db_table = 'fde_mmsg'
 
 
 class Plane(models.Model):
     tail = models.CharField(max_length=10)
-    airline = models.ForeignKey(
-        Airline, on_delete=models.CASCADE, related_name='planes')
-    type = models.ForeignKey(
-        'PlaneType', on_delete=models.CASCADE, related_name='planes')
+    airline = models.ForeignKey(Airline, models.DO_NOTHING)
+    type = models.ForeignKey('PlaneType', models.DO_NOTHING)
 
     class Meta:
+        managed = False
         db_table = 'plane'
 
 
@@ -126,6 +115,7 @@ class PlaneType(models.Model):
     type = models.CharField(max_length=100)
 
     class Meta:
+        managed = False
         db_table = 'plane_type'
 
 
@@ -138,12 +128,11 @@ class Snapshot(models.Model):
     flight = models.CharField(max_length=9, blank=True, null=True)
     phase = models.CharField(max_length=9, blank=True, null=True)
     data = models.TextField(blank=True, null=True)
-    plane = models.ForeignKey(
-        Plane, on_delete=models.CASCADE, related_name='snaphots', blank=True, null=True)
-    raw = models.ForeignKey(AcarsMsgRaw, on_delete=models.DO_NOTHING,
-                            related_name='snaphots', blank=True, null=True)
+    plane = models.ForeignKey(Plane, models.DO_NOTHING, blank=True, null=True)
+    raw = models.ForeignKey(AcarsMsgRaw, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'snapshot'
 
 
