@@ -53,10 +53,12 @@ class FaultReport(models.Model):
 class Fde(models.Model):
     cat = models.CharField(max_length=3, blank=True, null=True)
     fde_code = models.CharField(max_length=10, blank=True, null=True)
-    plf = models.ForeignKey(
+    fault_report = models.ForeignKey(
         FaultReport, on_delete=models.CASCADE, related_name='fde_messages')
-    mmsg = models.ForeignKey('Mmsg', on_delete=models.CASCADE,
-                             related_name='fde_message', blank=True, null=True)
+    # mmsg = models.ForeignKey('Mmsg', on_delete=models.CASCADE,
+    #                          related_name='fde_message', blank=True, null=True)
+
+    # plf = models.ForeignKey('FdeMmsg', on_delete=models.CASCADE, related_name='fde_messages')
 
     class Meta:
         db_table = 'fde'
@@ -87,11 +89,12 @@ class Mmsg(models.Model):
     chapter = models.CharField(max_length=3, blank=True, null=True)
     section = models.CharField(max_length=3, blank=True, null=True)
     equip_number = models.CharField(max_length=20, blank=True, null=True)
-    plf = models.ForeignKey(
+    fault_report = models.ForeignKey(
         FaultReport, on_delete=models.CASCADE, related_name='plf')
 
     fde = models.ForeignKey(
-        Fde, on_delete=models.CASCADE, related_name='mmsgs')
+        Fde, on_delete=models.CASCADE, related_name='mmsgs', null=True, blank=True)
+
     defect_status = models.CharField(max_length=10, blank=True, null=True)
     defect_ref = models.CharField(max_length=20, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
