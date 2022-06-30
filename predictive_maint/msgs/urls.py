@@ -7,6 +7,6 @@ urlpatterns = [
     path('occurrences', views.occurrences, name='occurrences'),
     path('occurrences/ajax/details', views.occurrences_details,
          name='occurrences_details'),
-    path('occurrences/details', views.occurrences_details_1,
+    path('occurrences/details/', views.OccurrencesDetailsView.as_view(),
          name='occurrences_details_1')
 ]

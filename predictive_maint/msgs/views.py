@@ -5,11 +5,18 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View
+from django.views.generic import View, ListView
 
 
 from .forms import OccurrencesDataRangeForm
 from . import services
+
+
+class OccurrencesDetailsView(ListView):
+    template_name = 'occurrences_details.html'
+
+    def get_queryset(self):
+        return services.get_occurrences_details_queryset(self.request)
 
 
 @login_required
@@ -46,6 +53,5 @@ def occurrences_details(request):
 
 @login_required
 def occurrences_details_1(request):
-    if request.method == 'POST':
-        return render(request, 'occurrences_details.html')
+
     return render(request, 'occurrences_details.html')

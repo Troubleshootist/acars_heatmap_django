@@ -48,3 +48,17 @@ def get_occurrences_details_dataset(request):
                            'defect_status',
                            'defect_ref'
                            )
+
+
+def get_occurrences_details_queryset(request):
+    tail = request.GET['tail']
+    ata_chapter = request.GET['ataChapter']
+    from_date = datetime.strptime(request.GET['fromDate'], '%Y-%m-%d')
+    to_date = datetime.strptime(request.GET['toDate'], '%Y-%m-%d')
+
+    messages = Mmsg.objects.filter(chapter=ata_chapter,
+                                   fault_report__raw__plane__tail=tail,
+                                   msg_date_time__gte=from_date,
+                                   msg_date_time__lte=to_date,
+                                   fault_report__raw__plane__airline_group__in=request.user.groups.all())
+    return messages

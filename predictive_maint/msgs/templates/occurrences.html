@@ -1,71 +1,51 @@
 {% extends "base.html" %}
-
-{% block title %}
-Occurences
-{% endblock %}
-
-
+{% block title %}Occurences{% endblock %}
 {% block content %}
-<br>
-<form action="" method="POST">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-
-                <div class="input-group mb-3">
-                    {% csrf_token %}
-                    {{ form }}
-
+    <br>
+    <form action="" method="POST">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        {% csrf_token %}
+                        {{ form }}
+                    </div>
+                    <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
+                    <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
+                    <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
+                    <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
+                    <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
                 </div>
-
-                <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
-                <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
-                <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
-                <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
-                <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
+                <div class="col"></div>
             </div>
-
-            <div class="col">
-
-            </div>
-
+            <input type="submit" value="Filter">
         </div>
-        <input type="submit" value="Filter">
+    </form>
+    <div class="container-fluid">{{ occurrences_table|safe }}</div>
+    <h4 id='details'>Occurences details</h4>
+    <div id='msg_details_div'>
+        <table id="mmsg_details_datatable" class="table table-light table-bordered">
+            <thead>
+                <th>MMSG</th>
+                <th>FDE Code</th>
+                <th>Date</th>
+                <th>Equipment number</th>
+                <th>Departing</th>
+                <th>Arriving</th>
+                <th>Flight</th>
+                <th>Status</th>
+                <th>Defect ref.</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <h4>History data</h4>
+        <table id="mmsg_details_history_datatable" class="table table-light">
+        </table>
     </div>
-</form>
-
-<div class="container-fluid">
-    {{occurrences_table|safe}}
-</div>
-
-<h4 id='details'>Occurences details</h4>
-
-<div id='msg_details_div'>
-    <table id="mmsg_details_datatable" class="table table-light table-bordered">
-        <thead>
-            
-            <th>MMSG</th>
-            <th>FDE Code</th>
-            <th>Date</th>
-            <th>Equipment number</th>
-            <th>Departing</th>
-            <th>Arriving</th>
-            <th>Flight</th>
-            <th>Status</th>
-            <th>Defect ref.</th> 
-            
-            
-        </thead>
-        <tbody></tbody>
-    </table>
-    <h4>History data</h4>
-    <table id="mmsg_details_history_datatable" class="table table-light"></table>
-</div>
-
 {% endblock %}
-
 {% block scripts %}
-<script>
+    <script>
 
 
     $(document).ready(function () {
@@ -78,59 +58,16 @@ Occurences
             ataChapter = $(this).parent().children()[0].innerText 
             fromDate = document.getElementById('id_from_date').value;
             toDate = document.getElementById('id_to_date').value;
+
+            var url = "{% url 'occurrences_details_1' %}?" + 
+                        "fromDate=" + fromDate + 
+                        "&toDate=" + toDate + 
+                        "&tail=" + tail + 
+                        "&ataChapter=" + ataChapter;
+            window.open(url); 
+            console.log(url)
             
-            $.getJSON('{% url 'occurrences_details' %}', {
-                tail: tail,
-                ataChapter: ataChapter,
-                fromDate: fromDate,
-                toDate: toDate
-            }).done(function (data) {
-                const text = 'Details For ' + tail + ', chapter ' + ataChapter
-                    document.getElementById('details').innerHTML = text
-
-                    // document.getElementById('msg_details_div').innerHTML = data
-
-                    var data_to_msg_table = JSON.parse(data)
-                    //var data_to_msg_history_table = JSON.parse(data[1])
-
-
-                    mmsg_table = $('#mmsg_details_datatable').DataTable({
-                        "data": data_to_msg_table,
-                        destroy: true,
-                        "paging": false,
-                        rowGroup: {
-                            dataSrc: [0, 3],
-                            startRender: function (rows, group) {
-                                //  var collapsed = !!collapsedGroups[group];
-                                var collapsed = true;
-                                console.log(collapsed);
-                                console.log('in the table renderer');
-                                rows.nodes().each(function (r) {
-                                    r.style.display = collapsed ? 'none' : '';
-                                });
-
-
-                                // Add category name to the <tr>. NOTE: Hardcoded colspan
-                                return $('<tr/>')
-                                    .append('<td colspan="2">' + group + ' (' + rows.count() + ')</td>')
-                                    .attr('data-name', group)
-                                    .toggleClass('collapsed', collapsed);
-                            },
-                        },
-
-                        "columns": [
-                            { data: "mmsg_code" },
-                            { data: "fde__fde_code" },
-                            { data: "msg_date_time" },
-                            { data: "equip_number" },
-                            { data: "fault_report__departing" },
-                            { data: "fault_report__arriving" },
-                            { data: "fault_report__flight" },
-                            { data: "defect_status" },
-                            { data: "defect_ref" },
-                        ]
-                    });
-            }); 
+            
             
        
        }); 
@@ -184,7 +121,5 @@ Occurences
     });
 
 
-</script>
-
-
+    </script>
 {% endblock %}
