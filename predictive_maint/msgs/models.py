@@ -6,7 +6,6 @@ class AcarsMsgRaw(models.Model):
     filename = models.CharField(max_length=50, blank=True, null=True)
     type = models.CharField(max_length=10, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
-    airplane = models.CharField(max_length=10, blank=True, null=True)
     processed = models.IntegerField(blank=True, null=True)
     plane = models.ForeignKey(
         'Plane', on_delete=models.CASCADE, related_name='raw_messages')
@@ -37,8 +36,6 @@ class FaultReport(models.Model):
     report_datetime = models.DateTimeField(blank=True, null=True)
     raw = models.ForeignKey(AcarsMsgRaw, on_delete=models.CASCADE,
                             related_name='fault_report', blank=True, null=True)
-    plane = models.ForeignKey('Plane', on_delete=models.CASCADE,
-                              related_name='fault_reports', blank=True, null=True)
 
     class Meta:
         db_table = 'fault_report'
@@ -96,17 +93,10 @@ class Mmsg(models.Model):
 
     class Meta:
         db_table = 'mmsg'
-
-
-# class FdeMmsg(models.Model):
-#     plf = models.ForeignKey(FaultReport, models.CASCADE, related_name='plf')
-#     fde = models.ForeignKey(Fde, models.CASCADE,
-#                             blank=True, null=True, related_name='fde')
-#     mmsg = models.ForeignKey(Mmsg, models.CASCADE,
-#                              blank=True, null=True, related_name='mmsg')
-
-#     class Meta:
-#         db_table = 'fde_mmsg'
+    
+    def __str__(self):
+        return f'{self.mmsg_code}, {self.msg_date_time}, {self.fault_report.raw.plane}'
+    
 
 
 class Plane(models.Model):
