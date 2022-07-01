@@ -1,4 +1,6 @@
 from time import strftime
+from zlib import DEF_BUF_SIZE
+from django import db
 from django.contrib.auth.models import Group
 from django.db import models
 
@@ -91,14 +93,43 @@ class Mmsg(models.Model):
         max_length=10, blank=True, null=True, default='Not open')
     defect_ref = models.CharField(max_length=20, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+    defect = models.ForeignKey('Defect', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         db_table = 'mmsg'
         ordering = ['-msg_date_time']
-    
+
     def __str__(self):
         return f"{self.mmsg_code}, {self.msg_date_time.strftime('%Y-%b-%d %H:%M')}, {self.fault_report.raw.plane.tail}"
+
+
+class Defect(models.Model):
+
+    plane = models.ForeignKey(
+        'Plane', on_delete=models.CASCADE, related_name='defects', null=True, blank=True)
+    reference = models.CharField(max_length=20)
+   
+    status = models.ForeignKey('DefectStatus', on_delete=models.CASCADE, related_name="defects")
+
+    class Meta:
+        db_table = 'defect'
+
+class DefectStatus(models.Model):
+    condition = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.condition
     
+    class Meta:
+        db_table = 'defect_status'
+
+class DefectHistory(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    before_status = models.ForeignKey(DefectStatus, on_delete=models.CASCADE, related_name='before_history')
+    after_status = models.ForeignKey(DefectStatus, on_delete=models.CASCADE, related_name='after_history')
+    defect = models.ForeignKey(Defect, on_delete=models.CASCADE, related_name="history")
+    class Meta:
+        db_table = 'defect_history'
 
 
 class Plane(models.Model):

@@ -9,13 +9,14 @@ def get_occurrences_df(data_from_form, request):
     occurrences = Mmsg.objects.filter(
         msg_date_time__gte=data_from_form['from_date'],
         msg_date_time__lte=data_from_form['to_date'],
-        fault_report__raw__plane__airline_group__in=request.user.groups.all()
+        fault_report__raw__plane__airline_group__in=request.user.groups.all(),
+        defect__status__in=data_from_form['status']
     )
     df = pd.DataFrame(occurrences.values(
         'mmsg_code', 'chapter', 'fault_report__raw__plane__tail'))
-    df = df.rename(columns={"mmsg_code": "MMSGs count", 
+    df = df.rename(columns={"mmsg_code": "MMSGs count",
                             "chapter": "ATA",
-                            "fault_report__raw__plane__tail" : 'A/C Reg.'})
+                            "fault_report__raw__plane__tail": 'A/C Reg.'})
     try:
         pivot = pd.pivot_table(df, columns='A/C Reg.',
                                aggfunc='count',
@@ -26,7 +27,7 @@ def get_occurrences_df(data_from_form, request):
         pivot = pd.DataFrame()
 
     return pivot.to_html(
-        classes='table table-bordered table-hover table-sm', 
+        classes='table table-bordered table-hover table-sm',
         table_id='occurrences_table')
 
 

@@ -25,7 +25,10 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-item nav-link" href="{% url 'occurrences' %}">Maintenance messages</a>
-                </div>
+                    <h5 class="nav navbar-nav navbar-right">
+                        <label class="nav-link disabled"> Logged in as {{request.user.username}}</label>
+                    </h5>
+
             </div>
         </nav>
         <div class="container">

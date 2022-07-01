@@ -11,15 +11,19 @@
                     {{ form.from_date }}
                     <span class="input-group-text">To date</span>
                     {{ form.to_date }}
-                    <input type="submit" value="Filter" class="btn btn-success mr-1">
+                    <span class="input-group-text">Date range</span>
                     <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
                     <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
                     <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
                     <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
                     <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
                 </div>
+                {{ form.status.label }}
+                {{ form.status }}
                 <div class="row"></div>
-                <div class="col"></div>
+                <div class="col">
+                    <input type="submit" value="Filter" class="btn btn-success mr-1">
+                </div>
             </div>
         </div>
     </form>
@@ -48,7 +52,36 @@
             window.open(url); 
         }); 
 
+        function setBackground() {
+            var table = document.getElementById("occurrences_table");
+            //i found this in a previous stack overflow answer and tried it
+            if (table) {
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    for (var j = 2, col; col = row.cells[j]; j++) {
+                        //this is for debugging purposes... I can't even get this to work
+                        var cell = table.rows[i].cells[j].innerHTML;
+                        // console.log(parseInt(cell))
+                        var cell_int = parseInt(cell)
+                        if (!isNaN(cell_int)) {
+                            if (cell_int > 0) {
+                                table.rows[i].cells[j].style.background = "lightgreen";
+                            }
+                            if (cell_int > 2) {
+                                table.rows[i].cells[j].style.background = "yellow";
+                            }
+                            if (cell_int > 5) {
+                                table.rows[i].cells[j].style.background = "orange";
+                            }
+                            if (cell_int > 10) {
+                                table.rows[i].cells[j].style.background = "red";
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        setBackground();
 
         $("#3dInput").click(function () {
             var today = new Date();

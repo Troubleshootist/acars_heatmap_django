@@ -23,11 +23,10 @@
                             </div>
                             <div class="col-8">
                                 <ul>
-                                    <li>Defect status: {{message.defect_status}}</li>
-                                    {% if message.defect_ref %}
+                                    <li>Defect status: {{message.defect.status.condition}}</li>
                                     
-                                    <li>Defect ref: {{message.defect_ref}}</li>
-                                    {% endif %}
+                                    <li>Defect ref: {{message.defect.reference}}</li>
+                                    
                                 </ul>
                                 <p> Full message text:  <code>"{{message.note}}"</code> </p>
                             </div>
