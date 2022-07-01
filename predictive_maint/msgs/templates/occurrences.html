@@ -5,52 +5,33 @@
     <form action="" method="POST">
         <div class="container">
             <div class="row">
-                <div class="col">
-                    <div class="input-group mb-3">
-                        {% csrf_token %}
-                        {{ form }}
-                    </div>
+                <div class="input-group mb-3">
+                    {% csrf_token %}
+                    <span class="input-group-text">From date</span>
+                    {{ form.from_date }}
+                    <span class="input-group-text">To date</span>
+                    {{ form.to_date }}
+                    <input type="submit" value="Filter" class="btn btn-success mr-1">
                     <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
                     <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
                     <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
                     <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
                     <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
                 </div>
+                <div class="row"></div>
                 <div class="col"></div>
             </div>
-            <input type="submit" value="Filter">
         </div>
     </form>
-    <div class="container-fluid">{{ occurrences_table|safe }}</div>
-    <h4 id='details'>Occurences details</h4>
-    <div id='msg_details_div'>
-        <table id="mmsg_details_datatable" class="table table-light table-bordered">
-            <thead>
-                <th>MMSG</th>
-                <th>FDE Code</th>
-                <th>Date</th>
-                <th>Equipment number</th>
-                <th>Departing</th>
-                <th>Arriving</th>
-                <th>Flight</th>
-                <th>Status</th>
-                <th>Defect ref.</th>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <h4>History data</h4>
-        <table id="mmsg_details_history_datatable" class="table table-light">
-        </table>
-    </div>
+    <div class="container-fluid mt-4">{{ occurrences_table|safe }}</div>
 {% endblock %}
 {% block scripts %}
     <script>
-
-
     $(document).ready(function () {
        
-        console.log("ready!");
+        $('#occurrences_table td').each(function () { 
+            console.log($(this))
+        });
 
         $(document).on("click", "#occurrences_table td", function(e) {
             var col = $(this).parent().children().index($(this));
@@ -65,12 +46,9 @@
                         "&tail=" + tail + 
                         "&ataChapter=" + ataChapter;
             window.open(url); 
-            console.log(url)
-            
-            
-            
-       
-       }); 
+        }); 
+
+
 
         $("#3dInput").click(function () {
             var today = new Date();

@@ -1,3 +1,4 @@
+from time import strftime
 from django.contrib.auth.models import Group
 from django.db import models
 
@@ -93,9 +94,10 @@ class Mmsg(models.Model):
 
     class Meta:
         db_table = 'mmsg'
+        ordering = ['-msg_date_time']
     
     def __str__(self):
-        return f'{self.mmsg_code}, {self.msg_date_time}, {self.fault_report.raw.plane}'
+        return f"{self.mmsg_code}, {self.msg_date_time.strftime('%Y-%b-%d %H:%M')}, {self.fault_report.raw.plane.tail}"
     
 
 

@@ -13,7 +13,25 @@
                      class="collapse"
                      data-parent="#accordion">
                     <div class="card-body">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        <div class="row">
+                            <div class="col-4">
+                                <ul>
+                                    <li>Code: {{ message.mmsg_code }}</li>
+                                    <li>Date & Time: {{ message.msg_date_time | date:"d M Y, H:i" }}</li>
+                                    {% if message.fde %}<li>FDE: {{ message.fde.fde_code }}</li>{% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-8">
+                                <ul>
+                                    <li>Defect status: {{message.defect_status}}</li>
+                                    {% if message.defect_ref %}
+                                    
+                                    <li>Defect ref: {{message.defect_ref}}</li>
+                                    {% endif %}
+                                </ul>
+                                <p> Full message text:  <code>"{{message.note}}"</code> </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
