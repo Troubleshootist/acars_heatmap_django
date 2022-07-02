@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% for message in object_list %}
+    <h4 class="mb-3">
+        Messages for {{ tail }} ATA {{ ata_chapter }} from {{ from_date|date:"d M Y" }} to {{ to_date|date:"d M Y" }}
+    </h4>
+    {% for message in object_list.messages %}
         <div id="accordion">
             <div class="card">
                 <div class="card-header">
@@ -23,17 +26,56 @@
                             </div>
                             <div class="col-8">
                                 <ul>
-                                    <li>Defect status: {{message.defect.status.condition}}</li>
-                                    
-                                    <li>Defect ref: {{message.defect.reference}}</li>
-                                    
+                                    <li>Defect status: {{ message.defect.status.condition }}</li>
+                                    <li>Defect ref: {{ message.defect.reference }}</li>
                                 </ul>
-                                <p> Full message text:  <code>"{{message.note}}"</code> </p>
+                                <p>
+                                    Full message text:  <code>"{{ message.note }}"</code>
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    {% endfor %}
+    <h4 class="mb-3 mt-3">History up to {{ from_date|date:"d M Y" }}</h4>
+    {% for message in object_list.history_messages %}
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#collapse{{ message.id }}"
+                       href="#collapse{{ message.id }}">{{ message }}</a>
+                </div>
+                <div id="collapse{{ message.id }}"
+                     class="collapse"
+                     data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <ul>
+                                    <li>Code: {{ message.mmsg_code }}</li>
+                                    <li>Date & Time: {{ message.msg_date_time | date:"d M Y, H:i" }}</li>
+                                    {% if message.fde %}<li>FDE: {{ message.fde.fde_code }}</li>{% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-8">
+                                <ul>
+                                    <li>Defect status: {{ message.defect.status.condition }}</li>
+                                    <li>Defect ref: {{ message.defect.reference }}</li>
+                                </ul>
+                                <p>
+                                    Full message text:  <code>"{{ message.note }}"</code>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No history messages</p>
     {% endfor %}
 {% endblock content %}

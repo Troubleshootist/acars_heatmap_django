@@ -1,4 +1,5 @@
-import re
+from datetime import datetime
+
 import json
 from django.http import JsonResponse, HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
@@ -17,6 +18,16 @@ class OccurrencesDetailsView(ListView):
 
     def get_queryset(self):
         return services.get_occurrences_details_queryset(self.request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tail'] = self.request.GET['tail']
+        context['ata_chapter'] = self.request.GET['ataChapter']
+        context['from_date'] = datetime.strptime(
+            self.request.GET['fromDate'], '%Y-%m-%d')
+        context['to_date'] = datetime.strptime(
+            self.request.GET['toDate'], '%Y-%m-%d')
+        return context
 
 
 @login_required

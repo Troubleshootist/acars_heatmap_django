@@ -57,7 +57,7 @@
             //i found this in a previous stack overflow answer and tried it
             if (table) {
                 for (var i = 0, row; row = table.rows[i]; i++) {
-                    for (var j = 2, col; col = row.cells[j]; j++) {
+                    for (var j = 1, col; col = row.cells[j]; j++) {
                         //this is for debugging purposes... I can't even get this to work
                         var cell = table.rows[i].cells[j].innerHTML;
                         // console.log(parseInt(cell))

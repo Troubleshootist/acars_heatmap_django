@@ -22,7 +22,9 @@ def get_occurrences_df(data_from_form, request):
                                aggfunc='count',
                                fill_value=0,
                                margins=True,
-                               index=['ATA']).sort_values(by='All', ascending=False, axis=1)
+                               index=['ATA'])
+        pivot = pivot.iloc[:, :-1]
+
     except:
         pivot = pd.DataFrame()
 
@@ -36,10 +38,25 @@ def get_occurrences_details_queryset(request):
     ata_chapter = request.GET['ataChapter']
     from_date = datetime.strptime(request.GET['fromDate'], '%Y-%m-%d')
     to_date = datetime.strptime(request.GET['toDate'], '%Y-%m-%d')
+    if ata_chapter == 'All':
+        messages = Mmsg.objects.filter(fault_report__raw__plane__tail=tail,
+                                       msg_date_time__gte=from_date,
+                                       msg_date_time__lte=to_date,
+                                       fault_report__raw__plane__airline_group__in=request.user.groups.all())
+        history_messages = Mmsg.objects.filter(fault_report__raw__plane__tail=tail,
+                                               msg_date_time__lt=from_date,
+                                               fault_report__raw__plane__airline_group__in=request.user.groups.all())
+    else:
+        messages = Mmsg.objects.filter(chapter=ata_chapter,
+                                       fault_report__raw__plane__tail=tail,
+                                       msg_date_time__gte=from_date,
+                                       msg_date_time__lte=to_date,
+                                       fault_report__raw__plane__airline_group__in=request.user.groups.all())
+        history_messages = Mmsg.objects.filter(chapter=ata_chapter,
+                                               fault_report__raw__plane__tail=tail,
+                                               msg_date_time__lt=from_date,
+                                               fault_report__raw__plane__airline_group__in=request.user.groups.all())
 
-    messages = Mmsg.objects.filter(chapter=ata_chapter,
-                                   fault_report__raw__plane__tail=tail,
-                                   msg_date_time__gte=from_date,
-                                   msg_date_time__lte=to_date,
-                                   fault_report__raw__plane__airline_group__in=request.user.groups.all())
-    return messages
+    queryset = {'messages': messages,
+                'history_messages': history_messages}
+    return queryset
