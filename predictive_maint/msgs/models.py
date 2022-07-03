@@ -1,3 +1,4 @@
+import re
 from time import strftime
 from zlib import DEF_BUF_SIZE
 from django import db
@@ -66,7 +67,7 @@ class MessageDescription(models.Model):
         max_length=50, blank=True, null=True)
     minor_notification_name = models.CharField(
         max_length=50, blank=True, null=True)
-    fim_ref = models.CharField(max_length=20, blank=True, null=True)
+    fim_ref = models.CharField(max_length=50, blank=True, null=True)
     mel_ref = models.CharField(max_length=20, blank=True, null=True)
     criteria = models.CharField(max_length=200, blank=True, null=True)
     tbs_program = models.CharField(max_length=200, blank=True, null=True)
@@ -95,6 +96,7 @@ class Mmsg(models.Model):
     note = models.TextField(blank=True, null=True)
     defect = models.ForeignKey(
         'Defect', on_delete=models.CASCADE, blank=True, null=True)
+    description = models.ForeignKey(MessageDescription, models.DO_NOTHING, blank=True, null=True, related_name = 'maint_message')
 
     class Meta:
         db_table = 'mmsg'

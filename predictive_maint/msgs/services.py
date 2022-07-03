@@ -35,6 +35,7 @@ def get_occurrences_df(data_from_form, request):
 
 def get_occurrences_details_queryset(request):
     tail = request.GET['tail']
+    plane = Plane.objects.get(tail=tail)
     ata_chapter = request.GET['ataChapter']
     from_date = datetime.strptime(request.GET['fromDate'], '%Y-%m-%d')
     to_date = datetime.strptime(request.GET['toDate'], '%Y-%m-%d')

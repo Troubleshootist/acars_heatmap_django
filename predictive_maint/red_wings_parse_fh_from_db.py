@@ -2,6 +2,7 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "predictive_maint.settings")
 
 import django
+from msgs.models import *
 django.setup()
 
 from django.core.management import call_command
@@ -9,7 +10,6 @@ from django.core.management import call_command
 import re
 from datetime import datetime
 
-from msgs.models import *
 
 raw_messages = AcarsMsgRaw.objects.filter(processed = 0, type='FH')
 count_processed = 0

@@ -22,6 +22,12 @@
                                     <li>Code: {{ message.mmsg_code }}</li>
                                     <li>Date & Time: {{ message.msg_date_time | date:"d M Y, H:i" }}</li>
                                     {% if message.fde %}<li>FDE: {{ message.fde.fde_code }}</li>{% endif %}
+                                    {% if message.description %}
+                                        <li>Description: {{ message.description.description }}</li>
+                                        <li>Major notification name: {{ message.description.major_notification_name }}</li>
+                                        <li>Minor notification name: {{ message.description.minor_notification_name }}</li>
+                                        <li>FIM Ref: {{ message.description.fim_ref }}</li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <div class="col-8">
