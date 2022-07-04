@@ -85,7 +85,7 @@
         $(document).on("click", "#occurrences_table td", function(e) {
             var col = $(this).parent().children().index($(this));
             tail = $("#occurrences_table th")[col+2].innerText 
-            ataChapter = $(this).parent().children()[0].innerText 
+            ataChapter = $(this).parent().children()[0].innerText.slice(0, 2) 
             fromDate = document.getElementById('id_from_date').value;
             toDate = document.getElementById('id_to_date').value;
 
