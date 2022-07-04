@@ -2,39 +2,84 @@
 {% block title %}Occurences{% endblock %}
 {% block content %}
     <br>
-    <form action="" method="POST">
-        <div class="container">
-            <div class="row">
-                <div class="input-group mb-3">
-                    {% csrf_token %}
-                    <span class="input-group-text">From date</span>
-                    {{ form.from_date }}
-                    <span class="input-group-text">To date</span>
-                    {{ form.to_date }}
-                    <span class="input-group-text">Date range</span>
-                    <input type="button" value="3 months" id="3mInput" class="btn btn-secondary">
-                    <input type="button" value="1 month" id="1mInput" class="btn btn-secondary">
-                    <input type="button" value="2 weeks" id="2wInput" class="btn btn-secondary">
-                    <input type="button" value="1 week" id="1wInput" class="btn btn-secondary">
-                    <input type="button" value="3 days" id="3dInput" class="btn btn-secondary">
-                </div>
-                {{ form.status.label }}
-                {{ form.status }}
-                <div class="row"></div>
-                <div class="col">
-                    <input type="submit" value="Filter" class="btn btn-success mr-1">
-                </div>
-            </div>
-        </div>
-    </form>
+    {% load crispy_forms_tags %}
+    {% crispy form form.helper %}
     <div class="container-fluid mt-4">{{ occurrences_table|safe }}</div>
 {% endblock %}
 {% block scripts %}
     <script>
+        const ATADICT = {
+            '21': 'AIR CONDITIONING',
+            '22': 'AUTOFLIGHT',
+            '23': 'COMMUNICATIONS',
+            '24': 'ELECTRICAL POWER',
+            '25': 'EQUIPMENT & FURNISHINGS',
+            '26': 'FIRE PROTECTION',
+            '27': 'FLIGHT CONTROLS',
+            '28': 'FUEL',
+            '29': 'HYDRAULIC POWER',
+            '30': 'ICE AND RAIN PROTECTION',
+            '31': 'INDICATING / RECORDING SYSTEMS',
+            '32': 'LANDING GEAR',
+            '33': 'LIGHTS',
+            '34': 'NAVIGATION',
+            '35': 'OXYGEN',
+            '36': 'PNEUMATIC',
+            '38': 'WATER / WASTE',
+            '44': 'CABIN SYSTEMS',
+            '45': 'CENTRAL MAINTENANCE SYSTEM',
+            '46': 'INFORMATION SYSTEMS',
+            '47': 'INERT GAS SYSTEM',
+            '49': 'APU',
+            '51': 'STRUTURES',
+            '52': 'DOORS',
+            '53': 'FUSELAGE',
+            '54': 'NACELLES / PYLONS',
+            '55': 'STABILIZERS',
+            '56': 'WINDOWS',
+            '57': 'WINGS',
+            '71': 'POWER PLANT',
+            '72': 'ENGINE',
+            '73': 'ENGINE FUEL AND CONTROLS',
+            '74': 'IGNTION',
+            '75': 'AIR',
+            '76': 'ENGINE CONTROLS',
+            '77': 'ENGINE INDICATION',
+            '78': 'EXHAUST',
+            '79': 'OIL',
+            '80': 'STARTING',
+        }
     $(document).ready(function () {
-       
-        $('#occurrences_table td').each(function () { 
-            console.log($(this))
+
+        // Ата чаптеры прописываем
+        $('#occurrences_table tr:gt(2):not(:last-child) th:first-child').each(function (){
+            ataDigit = $(this).html();   
+            ataDescription = ATADICT[$(this).html()];
+            $(this).html(ataDigit + ' ' + ataDescription) 
+        });
+
+        // Красим ячейки
+        $('#occurrences_table tr:not(:last-child) td').each(function () { 
+            $(this).attr('align', 'center')
+            const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+            var occurrencesNumber = parseInt($(this).html())
+            var fromDate = new Date($('#id_from_date').val());
+            var toDate = new Date($('#id_to_date').val());
+            var dateDifference = Math.floor((toDate - fromDate ) / _MS_PER_DAY) + 1
+            frequencyCoef = occurrencesNumber/dateDifference
+            if (frequencyCoef > 0) {
+                $(this).attr('class', 'bg-light')
+            }
+            if (frequencyCoef > 0.5) {
+                $(this).attr('class', 'bg-success')
+            }
+            if (frequencyCoef > 1.3) {
+                $(this).attr('class', 'bg-warning')
+            }
+            if (frequencyCoef > 2) {
+                $(this).attr('class', 'bg-danger text-white')
+            }
+            
         });
 
         $(document).on("click", "#occurrences_table td", function(e) {
@@ -51,37 +96,6 @@
                         "&ataChapter=" + ataChapter;
             window.open(url); 
         }); 
-
-        function setBackground() {
-            var table = document.getElementById("occurrences_table");
-            //i found this in a previous stack overflow answer and tried it
-            if (table) {
-                for (var i = 0, row; row = table.rows[i]; i++) {
-                    for (var j = 1, col; col = row.cells[j]; j++) {
-                        //this is for debugging purposes... I can't even get this to work
-                        var cell = table.rows[i].cells[j].innerHTML;
-                        // console.log(parseInt(cell))
-                        var cell_int = parseInt(cell)
-                        if (!isNaN(cell_int)) {
-                            if (cell_int > 0) {
-                                table.rows[i].cells[j].style.background = "lightgreen";
-                            }
-                            if (cell_int > 2) {
-                                table.rows[i].cells[j].style.background = "yellow";
-                            }
-                            if (cell_int > 5) {
-                                table.rows[i].cells[j].style.background = "orange";
-                            }
-                            if (cell_int > 10) {
-                                table.rows[i].cells[j].style.background = "red";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        setBackground();
 
         $("#3dInput").click(function () {
             var today = new Date();

@@ -1,18 +1,20 @@
 from datetime import datetime
 
 import json
+from pipes import Template
 from django.http import JsonResponse, HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View, ListView
+from django.utils.decorators import method_decorator
+from django.views.generic import View, ListView, FormView
 
 
 from .forms import OccurrencesDataRangeForm
 from . import services
 
-
+@method_decorator(login_required, name='dispatch')
 class OccurrencesDetailsView(ListView):
     template_name = 'occurrences_details.html'
 
@@ -30,39 +32,21 @@ class OccurrencesDetailsView(ListView):
         return context
 
 
-@login_required
-def index(request):
-    context = {'greetings': 'Hello, world!'}
-    return render(request, 'index.html', context=context)
+@method_decorator(login_required, name='dispatch')
+class OccurrencesView(View):
+    form_class = OccurrencesDataRangeForm
+    template_name = 'occurrences.html'
+    def get(self, request):
+        form = self.form_class()
+        context = {'form': form}
+        return render(request, 'occurrences.html', context=context)
 
-
-@login_required
-def occurrences(request):
-    context = {}
-    if request.method == 'POST':
-        form = OccurrencesDataRangeForm(request.POST)
+    def post(self, request):
+        form = self.form_class(request.POST)
+        context = {'form': form}
         if form.is_valid():
             occurrences_table = services.get_occurrences_df(
                 form.cleaned_data, request)
             context['occurrences_table'] = occurrences_table
-    else:
-        form = OccurrencesDataRangeForm()
-    context['form'] = form
-    return render(request, 'occurrences.html', context=context)
+        return render(request, 'occurrences.html', context=context)
 
-
-@login_required
-def occurrences_details(request):
-    if request.method == 'GET':
-        occurrences_details_dataset = services.get_occurrences_details_dataset(
-            request)
-        # return HttpResponse(response, content_type='application/json')
-        serialized = json.dumps(
-            list(occurrences_details_dataset), cls=DjangoJSONEncoder)
-        return JsonResponse(serialized, safe=False)
-
-
-@login_required
-def occurrences_details_1(request):
-
-    return render(request, 'occurrences_details.html')

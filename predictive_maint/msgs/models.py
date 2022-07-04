@@ -1,7 +1,5 @@
-import re
 from time import strftime
-from zlib import DEF_BUF_SIZE
-from django import db
+
 from django.contrib.auth.models import Group
 from django.db import models
 
