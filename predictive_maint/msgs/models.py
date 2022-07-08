@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.db import models
 
 
+
 class AcarsMsgRaw(models.Model):
     filename = models.CharField(max_length=50, blank=True, null=True)
     type = models.CharField(max_length=10, blank=True, null=True)
@@ -94,7 +95,7 @@ class Mmsg(models.Model):
     defect_ref = models.CharField(max_length=20, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     defect = models.ForeignKey(
-        'Defect', on_delete=models.CASCADE, blank=True, null=True)
+        'defects.Defect', on_delete=models.CASCADE, blank=True, null=True, related_name='messages')
     description = models.ForeignKey(MessageDescription, models.DO_NOTHING, blank=True, null=True, related_name = 'maint_message')
 
     class Meta:
@@ -105,51 +106,6 @@ class Mmsg(models.Model):
         return f"{self.mmsg_code}, {self.msg_date_time.strftime('%d %b %Y, %H:%M')}"
 
 
-class Defect(models.Model):
-
-    plane = models.ForeignKey(
-        'Plane', on_delete=models.CASCADE, related_name='defects', null=True, blank=True)
-    reference = models.CharField(max_length=20)
-    description = models.CharField(max_length=255, null=True, blank=True)
-    action = models.CharField(max_length=255, null=True, blank=True)
-
-    status = models.ForeignKey(
-        'DefectStatus', on_delete=models.CASCADE, related_name="defects")
-
-    def get_absolute_url(self):
-        return reverse("defects")
-    
-    def __str__(self):
-        return f'{self.plane}, {self.reference}, {self.status}, {self.description}'
-    
-
-    class Meta:
-        db_table = 'defect'
-        ordering = ['-id']
-
-
-class DefectStatus(models.Model):
-    condition = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.condition
-
-    class Meta:
-        db_table = 'defect_status'
-
-
-class DefectHistory(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    before_status = models.ForeignKey(
-        DefectStatus, on_delete=models.CASCADE, related_name='before_history')
-    after_status = models.ForeignKey(
-        DefectStatus, on_delete=models.CASCADE, related_name='after_history')
-    defect = models.ForeignKey(
-        Defect, on_delete=models.CASCADE, related_name="history")
-    action = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        db_table = 'defect_history'
 
 
 class Plane(models.Model):

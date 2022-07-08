@@ -1,7 +1,7 @@
 from datetime import datetime
 from hashlib import new
 
-from django.urls import reverse_lazy
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -50,39 +50,6 @@ class OccurrencesView(View):
             context['occurrences_table'] = occurrences_table
         return render(request, 'occurrences.html', context=context)
 
-@method_decorator(login_required, name='dispatch')
-class OpenDefectView(CreateView):
-    model = Defect
-    template_name = 'defect_form.html'
-    form_class = CreateDefectForm
-    success_url = reverse_lazy('defects')
-
-    def form_valid(self, form):     
-        self.defect = form.save(commit=False)
-        services.open_defect(self.defect, self.kwargs.get('pk'))
-        return super().form_valid(form)
-  
-
-@method_decorator(login_required, name='dispatch')
-class DefectsView(ListView):
-    template_name = 'defect_list.html'
-    model = Defect
-
- 
-
-
-@method_decorator(login_required, name='dispatch')
-class EditDefectView(UpdateView):
-    model = Defect
-    success_url = reverse_lazy('defects')
-    template_name = 'defect_form.html'
-    form_class = EditDefectForm
-
-    def form_valid(self, form):
-        old_defect = self.get_object()     
-        new_defect = form.save()
-        services.add_defect_to_history(new_defect, old_defect.status, new_defect.status, new_defect.action)
-        return super().form_valid(form)
 
 
         
