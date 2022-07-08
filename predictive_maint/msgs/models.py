@@ -1,6 +1,7 @@
 from time import strftime
 
 from django.contrib.auth.models import Group
+from django.urls import reverse
 from django.db import models
 
 
@@ -109,12 +110,22 @@ class Defect(models.Model):
     plane = models.ForeignKey(
         'Plane', on_delete=models.CASCADE, related_name='defects', null=True, blank=True)
     reference = models.CharField(max_length=20)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    action = models.CharField(max_length=255, null=True, blank=True)
 
     status = models.ForeignKey(
         'DefectStatus', on_delete=models.CASCADE, related_name="defects")
 
+    def get_absolute_url(self):
+        return reverse("defects")
+    
+    def __str__(self):
+        return f'{self.plane}, {self.reference}, {self.status}, {self.description}'
+    
+
     class Meta:
         db_table = 'defect'
+        ordering = ['-id']
 
 
 class DefectStatus(models.Model):
@@ -135,6 +146,7 @@ class DefectHistory(models.Model):
         DefectStatus, on_delete=models.CASCADE, related_name='after_history')
     defect = models.ForeignKey(
         Defect, on_delete=models.CASCADE, related_name="history")
+    action = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         db_table = 'defect_history'

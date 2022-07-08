@@ -34,10 +34,16 @@
                                 <ul>
                                     <li>Defect status: {{ message.defect.status.condition }}</li>
                                     <li>Defect ref: {{ message.defect.reference }}</li>
+                                    
                                 </ul>
                                 <p>
                                     Full message text:  <code>"{{ message.note }}"</code>
                                 </p>
+                                {% if message.defect.status.condition == "Not Open" %}
+                                    <a href="{% url 'open_defect' message.id%}" type="button" class="btn btn-primary" align="right">Open defect</a>
+                                {% else %}
+                                    <a href="{% url 'edit_defect' message.defect.id%}" type="button" class="btn btn-success" align="right">Edit defect</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

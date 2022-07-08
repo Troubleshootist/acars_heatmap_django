@@ -1,8 +1,6 @@
-from ctypes import c_ssize_t
-from curses.ascii import HT
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Fieldset, Field, Div, HTML, Row, Column
+from crispy_forms.layout import Submit, Layout, Fieldset, Div, HTML, Row, Column
 from crispy_forms.bootstrap import InlineCheckboxes
 
 from .models import *
@@ -32,9 +30,6 @@ class OccurrencesDataRangeForm(forms.Form):
             ),
                 Row(InlineCheckboxes('status')),
             ),
-            
-
-
         )
         self.helper.add_input(Submit('submit', 'Submit'))
 
@@ -44,3 +39,49 @@ class OccurrencesDataRangeForm(forms.Form):
         attrs={'type': 'date', 'class': 'form-control', 'style':'max-width: 9em'}))
     status = forms.ModelMultipleChoiceField(DefectStatus.objects.all(), widget=forms.CheckboxSelectMultiple(
         attrs={"class": "col", "type": "checkbox"}), label='Status', to_field_name="condition")
+
+
+class CreateDefectForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-inline'
+        self.helper.layout = Layout(
+            Div(
+                Row('reference'),
+                Row('description'),
+            )
+        )
+        self.helper.add_input(Submit('submit', 'Submit'))
+        
+    class Meta:
+        model = Defect
+        exclude = ('plane', 'status', 'action')
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+        }
+
+class EditDefectForm(forms.ModelForm):
+    class Meta:
+        model = Defect
+        exclude = ('plane',)
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+            'action': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-inline'
+        self.helper.layout = Layout(
+            Div(
+                Row('reference'),
+                Row(
+                    Column('description'),
+                    Column('action'),  
+                ),
+                Row('status')
+            )
+        )
+        self.helper.add_input(Submit('submit', 'Submit'))
