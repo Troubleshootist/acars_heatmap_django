@@ -23,5 +23,6 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('msgs/', include('msgs.urls')),
     path('defects/', include('defects.urls')),
+    path('task_cards/', include('task_cards.urls')),
     path('', include('home.urls'))
 ]
