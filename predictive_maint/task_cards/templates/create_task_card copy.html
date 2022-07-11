@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+       {% csrf_token %}
+    {{ form }}
+    <div id="form_set">
+        {{ formset.management_form }}
+        {% comment %} {% for step_form in formset %}{{ step_form.as_table }}{% endfor %} {% endcomment %}
+    </div>
+    <div id="empty_form" style="display:none">
+
+        {% with formset.empty_form as form %}
+            <div class="row" ali>
+                {% comment %} <div class="col-1">
+                    <div class="row">
+
+                        {{ form.number.label_tag }}
+                        {{ form.number }}
+                    </div>
+                </div> {% endcomment %}
+                <div class="col-8">
+                    {{ form.text.label_tag }}
+                    {{ form.text }}
+                </div>
+                <div class="col-2">
+                    {{ form.image.label_tag }}
+                    {{ form.image }}
+                </div>
+                <div class="col-1">
+                    {{ form.DELETE.label_tag }}
+                    {{ form.DELETE }}
+                </div>
+            </div>
+          
+        {% endwith %}
+    </div>
+    <input type="button" value="Add More" id="add_more"> 
+    <input type="submit" class="btn" value="Submit" />
+    </form>
+    
+{% endblock content %}
+{% block scripts %}
+    <script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_steps-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_steps-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+    </script>
+{% endblock scripts %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for task_card in object_list %}
+     
+    <a href="{% url 'task_card_details' task_card.id %}">{{ task_card }}</a>
+    {% endfor %}
+{% endblock content %}

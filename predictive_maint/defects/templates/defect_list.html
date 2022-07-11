@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-    <a href="{% url 'open_defect' %}" class="btn btn-primary mb-3">Open defect</a>
+    <h3 align="center">Defects list</h3>
+    <div align="right">
+        <a href="{% url 'open_defect' %}" class="btn btn-primary mb-3">Open defect</a>
+    </div>
     {% for defect in object_list %}
         {% if not defect.id == 1 %}
             <div id="accordion">

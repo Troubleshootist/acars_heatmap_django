@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.db import models
 
 
-
 class AcarsMsgRaw(models.Model):
     filename = models.CharField(max_length=50, blank=True, null=True)
     type = models.CharField(max_length=10, blank=True, null=True)
@@ -16,13 +15,6 @@ class AcarsMsgRaw(models.Model):
 
     class Meta:
         db_table = 'acars_msg_raw'
-
-
-class Airline(models.Model):
-    name = models.CharField(max_length=30)
-
-    class Meta:
-        db_table = 'airline'
 
 
 class AlembicVersion(models.Model):
@@ -96,7 +88,8 @@ class Mmsg(models.Model):
     note = models.TextField(blank=True, null=True)
     defect = models.ForeignKey(
         'defects.Defect', on_delete=models.CASCADE, blank=True, null=True, related_name='messages')
-    description = models.ForeignKey(MessageDescription, models.DO_NOTHING, blank=True, null=True, related_name = 'maint_message')
+    description = models.ForeignKey(
+        MessageDescription, models.DO_NOTHING, blank=True, null=True, related_name='maint_message')
 
     class Meta:
         db_table = 'mmsg'
@@ -106,12 +99,9 @@ class Mmsg(models.Model):
         return f"{self.mmsg_code}, {self.msg_date_time.strftime('%d %b %Y, %H:%M')}"
 
 
-
-
 class Plane(models.Model):
     tail = models.CharField(max_length=10)
-    airline = models.ForeignKey(
-        Airline, on_delete=models.CASCADE, related_name='planes')
+
     type = models.ForeignKey(
         'PlaneType', on_delete=models.CASCADE, related_name='planes')
     airline_group = models.ForeignKey(
@@ -130,6 +120,8 @@ class PlaneType(models.Model):
     class Meta:
         db_table = 'plane_type'
 
+    def __str__(self):
+        return f'{self.type}'
 
 class Snapshot(models.Model):
     type = models.CharField(max_length=30, blank=True, null=True)
@@ -147,22 +139,3 @@ class Snapshot(models.Model):
 
     class Meta:
         db_table = 'snapshot'
-
-
-class User(models.Model):
-    username = models.CharField(max_length=50)
-    password_hash = models.CharField(max_length=128)
-    airline = models.ForeignKey(Airline, models.DO_NOTHING)
-    role = models.ForeignKey('UserRole', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'user'
-
-
-class UserRole(models.Model):
-    role = models.CharField(max_length=10)
-
-    class Meta:
-        managed = False
-        db_table = 'user_role'

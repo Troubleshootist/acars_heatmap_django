@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+admin.site.register(TaskCard)
+admin.site.register(TaskCardStep)
+admin.site.register(TaskCardMaterial)

@@ -1,24 +1,29 @@
+
 from django.db import models
+
 
 class TaskCard(models.Model):
     class Meta:
         db_table = 'task_card'
     number = models.CharField(max_length=30)
     description = models.CharField(max_length=255)
-    ata_chapter = models.CharField(max_length=20)
+    ata_chapter = models.CharField(max_length=20, blank=True, null=True)
+    issued_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     plane_type = models.ForeignKey('msgs.PlaneType', on_delete=models.DO_NOTHING, blank=True, null=True)
-    defect = models.ForeignKey(Defect, on_delete=models.DO_NOTHING, related_name='task_card', blank=True, null=True)
+    defect = models.ForeignKey('defects.Defect', on_delete=models.DO_NOTHING, related_name='task_card', blank=True, null=True)
 
 
 class TaskCardStep(models.Model):
     class Meta:
         db_table = 'task_card_step'
-    number = models.IntegerField()
-    text = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='images/')
+        ordering = ['number']
+    number = models.IntegerField(blank=True, null=True)
+    text = models.TextField(default="-----")
+    image = models.ImageField(upload_to=f'images/%Y/%m/%d/%H/%M', null=True, blank=True)
     task_card = models.ForeignKey(TaskCard, on_delete=models.CASCADE, related_name='steps')
 
-class Materials(models.Model):
+    
+class TaskCardMaterial(models.Model):
     class Meta:
         db_table = 'task_card_material'
     part_number = models.CharField(max_length=30)

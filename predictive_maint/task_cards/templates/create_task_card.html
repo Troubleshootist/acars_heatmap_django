@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<form method="post">
 
-{% endblock %content %}
+    {{ form }}
+
+    {% for formset in inlines %}
+      {{ formset }}
+    {% endfor %}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock content %}
