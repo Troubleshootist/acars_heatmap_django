@@ -12,6 +12,10 @@ class TaskCard(models.Model):
     plane_type = models.ForeignKey('msgs.PlaneType', on_delete=models.DO_NOTHING, blank=True, null=True)
     defect = models.ForeignKey('defects.Defect', on_delete=models.DO_NOTHING, related_name='task_card', blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.number} - {self.description}'
+    
+
 
 class TaskCardStep(models.Model):
     class Meta:
