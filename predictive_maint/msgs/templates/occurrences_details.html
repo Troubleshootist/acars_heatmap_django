@@ -7,10 +7,28 @@
         <div id="accordion">
             <div class="card">
                 <div class="card-header">
-                    <a class="card-link"
-                       data-bs-toggle="collapse"
-                       data-bs-target="#collapse{{ message.id }}"
-                       href="#collapse{{ message.id }}">{{ message }}</a>
+                    <div class="row">
+                        <div class="col-10">
+                            <a class="card-link"
+                               data-bs-toggle="collapse"
+                               data-bs-target="#collapse{{ message.id }}"
+                               href="#collapse{{ message.id }}">{{ message }}</a>
+                        </div>
+                        <div class="col-2">
+                            {% if message.defect.status.condition == "Pending" %}
+                                <span class="badge bg-success text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                            {% endif %}
+                            {% if message.defect.status.condition == "Open" %}
+                                <span class="badge bg-danger text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                            {% endif %}
+                            {% if message.defect.status.condition == "Closed" %}
+                                <span class="badge bg-info text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                            {% endif %}
+                            {% if message.defect.status.condition == "Not Open" %}
+                                <span class="badge bg-warning text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 <div id="collapse{{ message.id }}"
                      class="collapse"
@@ -33,16 +51,21 @@
                             <div class="col-8">
                                 <ul>
                                     <li>Defect status: {{ message.defect.status.condition }}</li>
-                                    <li>Defect ref: {{ message.defect.reference }}</li>
-                                    
+                                    <li>Defect ref: <a href="{% url 'defect_details' message.defect.id %}">{{ message.defect.reference }}</a></li>
                                 </ul>
                                 <p>
                                     Full message text:  <code>"{{ message.note }}"</code>
                                 </p>
                                 {% if message.defect.status.condition == "Not Open" %}
-                                    <a href="{% url 'open_defect' message.id%}" type="button" class="btn btn-primary" align="right">Open defect</a>
+                                    <a href="{% url 'open_defect' message.id %}"
+                                       type="button"
+                                       class="btn btn-primary"
+                                       align="right">Open defect</a>
                                 {% else %}
-                                    <a href="{% url 'edit_defect' message.defect.id%}" type="button" class="btn btn-success" align="right">Edit defect</a>
+                                    <a href="{% url 'edit_defect' message.defect.id %}"
+                                       type="button"
+                                       class="btn btn-success"
+                                       align="right">Edit defect</a>
                                 {% endif %}
                             </div>
                         </div>

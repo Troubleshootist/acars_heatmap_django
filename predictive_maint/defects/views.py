@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
 
 from msgs.models import *
@@ -51,3 +51,8 @@ class EditDefectView(UpdateView):
         services.add_defect_to_history(
             new_defect, old_defect.status, new_defect.status, new_defect.action)
         return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class DefectDetailView(DetailView):
+    model = Defect
+    template_name = 'defect_details.html'

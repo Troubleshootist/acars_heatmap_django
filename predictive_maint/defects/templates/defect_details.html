@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Defect {{defect.reference}} details</h3>
+
+        <ul>
+            <li>Description: {{ defect.description }}</li>
+            <li>MMSG: {{ defect.messages.first.mmsg_code }}</li>
+            <li>Issue date: {{ defect.history.first.date | date:"d M Y, H:i" }}</li>
+            <li>Occurrences after issue: {{ defect.messages.count }}</li>
+            <li>Task cards: 
+                {% for task_card in defect.task_cards.all %}
+                    {{task_card}}
+                {% endfor %}
+            </li>
+            <li>
+                Defect history:
+                <ul>
+                    {% for history in defect.history.all %}
+                        <li>{{ history.date | date:"d M Y, H:i" }}: {{ history.before_status }} -> {{ history.after_status }}</li>
+                        <code>Action: {{ history.action }}</code>
+                    {% endfor %}
+                </ul>
+            </li>
+        
+
+   
+      
+            <li>Defect status: {{ defect.status.condition }}</li>
+          
+        </ul>
+        <a href="{% url 'edit_defect' defect.id %}"
+           type="button"
+           class="btn btn-success"
+           align="right">Edit defect</a>
+
+</div>
+{% endblock content %}
