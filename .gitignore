@@ -2,3 +2,4 @@
 /venv
 /local
 predictive_maint/predictive_maint/settings.py
+predictive_maint/static/
