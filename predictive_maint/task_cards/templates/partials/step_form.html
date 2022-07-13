@@ -1,0 +1,16 @@
+<div class="row mt-3 mb-3">
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    <div class="col-6">
+        {{ form.text.label_tag }}
+        {{ form.text }}
+    </div>
+    <div class="col-4">
+        {{ form.image.label_tag }}
+        {{ form.image }}
+    </div>
+    <div class="col-2">
+        <label for="">Step to delete</label>
+        {{ form.DELETE }}
+    </div>
+
+</div>  

@@ -15,7 +15,7 @@ class Defect(models.Model):
         'DefectStatus', on_delete=models.CASCADE, related_name="defects")
 
     def __str__(self):
-        return f'{self.plane}, {self.reference}, {self.description}'
+        return f'{self.reference}, {self.plane}, {self.description}'
     
 
     class Meta:

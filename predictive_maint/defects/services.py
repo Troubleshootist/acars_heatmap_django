@@ -19,10 +19,10 @@ def open_defect_by_message(defect, message_id):
     else:
         defect.save()
     before_status = DefectStatus.objects.get(condition='Not Open')
-    add_defect_to_history(defect, before_status, defect.status)
+    add_defect_to_history(defect, before_status, defect.status, defect.action)
 
-
-def add_defect_to_history(defect, before_status, after_status, action=None):
+    
+def add_defect_to_history(defect, before_status, after_status, action):
     defect_history = DefectHistory(
         defect=defect,
         date = datetime.now(tz=pytz.utc),

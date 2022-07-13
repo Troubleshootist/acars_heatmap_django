@@ -16,13 +16,13 @@
                         </div>
                         <div class="col-2">
                             {% if message.defect.status.condition == "Pending" %}
-                                <span class="badge bg-success text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                                <span class="badge bg-success text-wrap" align="right">{{ message.defect.reference }} {{ message.defect.status.condition }}</span>
                             {% endif %}
                             {% if message.defect.status.condition == "Open" %}
-                                <span class="badge bg-danger text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                                <span class="badge bg-danger text-wrap" align="right">{{ message.defect.reference }} {{ message.defect.status.condition }}</span>
                             {% endif %}
                             {% if message.defect.status.condition == "Closed" %}
-                                <span class="badge bg-info text-wrap" align="right">{{ message.defect.status.condition }}</span>
+                                <span class="badge bg-info text-wrap" align="right">{{ message.defect.reference }} {{ message.defect.status.condition }}</span>
                             {% endif %}
                             {% if message.defect.status.condition == "Not Open" %}
                                 <span class="badge bg-warning text-wrap" align="right">{{ message.defect.status.condition }}</span>
@@ -51,7 +51,9 @@
                             <div class="col-8">
                                 <ul>
                                     <li>Defect status: {{ message.defect.status.condition }}</li>
-                                    <li>Defect ref: <a href="{% url 'defect_details' message.defect.id %}">{{ message.defect.reference }}</a></li>
+                                    <li>
+                                        Defect ref: <a href="{% url 'defect_details' message.defect.id %}">{{ message.defect.reference }}</a>
+                                    </li>
                                 </ul>
                                 <p>
                                     Full message text:  <code>"{{ message.note }}"</code>
