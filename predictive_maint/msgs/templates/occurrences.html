@@ -88,12 +88,16 @@
             ataChapter = $(this).parent().children()[0].innerText.slice(0, 2) 
             fromDate = document.getElementById('id_from_date').value;
             toDate = document.getElementById('id_to_date').value;
-
+            var statuses = ""
+            $('input[name=status]:checked').each(function(){
+                statuses += ($(this).val() + "---");
+            });
             var url = "{% url 'occurrences_details_1' %}?" + 
                         "fromDate=" + fromDate + 
                         "&toDate=" + toDate + 
                         "&tail=" + tail + 
-                        "&ataChapter=" + ataChapter;
+                        "&ataChapter=" + ataChapter +
+                        "&statuses=" + statuses 
             window.open(url); 
         }); 
 

@@ -38,22 +38,25 @@ def get_occurrences_details_queryset(request):
     tail = request.GET['tail']
     plane = Plane.objects.get(tail=tail)
     ata_chapter = request.GET['ataChapter']
+    statuses = request.GET['statuses'].split('---')
     from_date = datetime.strptime(request.GET['fromDate'], '%Y-%m-%d')
     to_date = datetime.strptime(request.GET['toDate'], '%Y-%m-%d')
     if ata_chapter == 'All':
         messages = Mmsg.objects.filter(fault_report__raw__plane__tail=tail,
                                        msg_date_time__gte=from_date,
                                        msg_date_time__lte=to_date,
-                                       fault_report__raw__plane__airline_group__in=request.user.groups.all())
+                                       fault_report__raw__plane__airline_group__in=request.user.groups.all(),
+                                       defect__status__condition__in = statuses)
         history_messages = Mmsg.objects.filter(fault_report__raw__plane__tail=tail,
                                                msg_date_time__lt=from_date,
                                                fault_report__raw__plane__airline_group__in=request.user.groups.all())
-    else:
+    else:   
         messages = Mmsg.objects.filter(chapter=ata_chapter,
                                        fault_report__raw__plane__tail=tail,
                                        msg_date_time__gte=from_date,
                                        msg_date_time__lte=to_date,
-                                       fault_report__raw__plane__airline_group__in=request.user.groups.all())
+                                       fault_report__raw__plane__airline_group__in=request.user.groups.all(),
+                                       defect__status__condition__in = statuses)
         history_messages = Mmsg.objects.filter(chapter=ata_chapter,
                                                fault_report__raw__plane__tail=tail,
                                                msg_date_time__lt=from_date,

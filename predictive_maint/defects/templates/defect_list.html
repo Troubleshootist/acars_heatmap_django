@@ -2,7 +2,7 @@
 {% block content %}
     <h3 align="center">Defects list</h3>
     <div align="right">
-        <a href="{% url 'open_defect' %}" class="btn btn-primary mb-3">Open defect</a>
+        <a href="{% url 'open_defect' %}" class="btn btn-primary mb-3" target="_blank">Open defect</a>
     </div>
     {% for defect in object_list %}
         {% if not defect.id == 1 %}
