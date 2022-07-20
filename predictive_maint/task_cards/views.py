@@ -8,6 +8,7 @@ from extra_views import CreateWithInlinesView, InlineFormSetFactory
 
 from .models import *
 from .forms import *
+from . import services
 
 
 @method_decorator(login_required, name='dispatch')
@@ -150,3 +151,7 @@ class CreateTaskCardViewaaaaa(CreateWithInlinesView):
     fields = '__all__'
     template_name = 'create_task_card.html'
     factory_kwargs = {'extra': 6}
+
+@login_required
+def task_card_print(request, pk):
+    services.task_card_print(pk)

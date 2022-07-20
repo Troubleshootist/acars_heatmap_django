@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.TaskCardsListView.as_view(), name='task_card_list'),
     path('<pk>/update', views.TaskCardUpdateView.as_view(), name='task_card_update'),
     path('<pk>/details', views.TaskCardDetailView.as_view(), name='task_card_details'),
+    path('<pk>/print', views.task_card_print, name='task_card_print'),
 
 ]
