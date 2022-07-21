@@ -1,5 +1,6 @@
 
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
@@ -154,4 +155,7 @@ class CreateTaskCardViewaaaaa(CreateWithInlinesView):
 
 @login_required
 def task_card_print(request, pk):
-    services.task_card_print(pk)
+    output_path = services.task_card_print(pk)
+    pdf = open(output_path, 'rb')
+
+    return FileResponse(pdf, content_type='application/pdf')
