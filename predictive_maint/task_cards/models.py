@@ -1,3 +1,5 @@
+from operator import mod
+from unicodedata import category
 from django.core.exceptions import ValidationError
 
 
@@ -31,12 +33,22 @@ class TaskCard(models.Model):
 class TaskCardStep(models.Model):
     class Meta:
         db_table = 'task_card_step'
-        ordering = ['number']
-    number = models.IntegerField(blank=True, null=True)
-    text = models.TextField(default="-----", validators=[latex_sym_validator])
+
+    text = models.TextField(default="", validators=[latex_sym_validator])
     image = models.ImageField(upload_to=f'images/%Y/%m/%d/%H/%M', null=True, blank=True)
+    manhours = models.DecimalField(decimal_places=1, max_digits=3, default=0)
+    
+    staff_cat = models.ForeignKey('StaffCategory', on_delete=models.DO_NOTHING, blank=True, null=True)
     task_card = models.ForeignKey(TaskCard, on_delete=models.CASCADE, related_name='steps')
 
+class StaffCategory(models.Model):
+    class Meta:
+        db_table = 'staff_category'
+
+    category = models.CharField(max_length=5)
+    
+    def __str__(self) -> str:
+        return self.category
     
 class TaskCardMaterial(models.Model):
     class Meta:

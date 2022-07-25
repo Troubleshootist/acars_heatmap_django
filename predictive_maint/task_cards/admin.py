@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(TaskCard)
 admin.site.register(TaskCardStep)
 admin.site.register(TaskCardMaterial)
+admin.site.register(StaffCategory)

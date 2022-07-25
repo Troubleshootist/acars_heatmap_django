@@ -21,10 +21,10 @@ class CreateStepForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'text': forms.Textarea(attrs={'cols': 50, 'rows': 3, 'class':"form-control mt-2 mb-3"}),
-            'number': forms.NumberInput(attrs={"style": "width: 3em"}),
             'DELETE': forms.CheckboxInput(attrs={"class": "form-check-input"}),
             'image': forms.FileInput(attrs={"type": "file"}),
-            
+            'manhours': forms.NumberInput(attrs={"class": "w-25"}),
+            'staff_cat': forms.Select(attrs={"class": "w-75"})
         }
         
 

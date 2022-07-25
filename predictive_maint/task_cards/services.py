@@ -3,6 +3,7 @@ import jinja2
 import os
 from jinja2 import Template
 from django.conf import settings
+from django.db.models import Sum    
 
 from .models import *
 
@@ -30,7 +31,7 @@ def task_card_print(pk):
         'description': task_card.description,
         'ac_type': task_card.plane_type.type,
         'defect_ref': task_card.defect.reference if task_card.defect else 'N/A',
-        'down_time': 'TO DO!!!'
+        'down_time': task_card.steps.aggregate(sum=Sum('manhours'))['sum']
     }
     print(template.render(context))
     document = template.render(context)
@@ -41,7 +42,7 @@ def task_card_print(pk):
 
         output.write(document)
         output.close
-    latex_code = subprocess.call('pdflatex -output-directory=' + os.path.join(settings.MEDIA_ROOT, 'tex', 'output') + ' ' + output.name)
+    latex_code = subprocess.call('pdflatex -output-directory=' + os.path.join(settings.MEDIA_ROOT, 'tex', 'output') + ' ' + output.name, shell=True)
     if latex_code != 0:
         print('problem')
     return os.path.join(settings.MEDIA_ROOT, 'tex', 'output', task_card.number + '.pdf')
