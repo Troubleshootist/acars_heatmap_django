@@ -42,7 +42,7 @@ def task_card_print(pk):
 
         output.write(document)
         output.close
-    latex_code = subprocess.call('pdflatex -output-directory=' + os.path.join(settings.MEDIA_ROOT, 'tex', 'output') + ' ' + output.name, shell=True)
+    latex_code = subprocess.call('/usr/local/texlive/2022/bin/x86_64-linux/pdflatex -output-directory=' + os.path.join(settings.MEDIA_ROOT, 'tex', 'output') + ' ' + output.name, shell=True)
     if latex_code != 0:
         print('problem')
     return os.path.join(settings.MEDIA_ROOT, 'tex', 'output', task_card.number + '.pdf')

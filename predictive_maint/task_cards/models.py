@@ -7,7 +7,7 @@ from django.db import models
 
 
 def latex_sym_validator(string):
-    restricted_chars = ['{', '}']
+    restricted_chars = ['{', '}', '&']
     for char in string:
         if char in restricted_chars:
             raise ValidationError(
