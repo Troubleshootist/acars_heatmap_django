@@ -20,7 +20,13 @@
         <ul>
             <li>ATA Chapter: {{ object.ata_chapter }}</li>
             <li>Description: {{ object.description }}</li>
-            <li>A/C Type: {{ object.plane_type }}</li>
+            <li>Effective on AC:
+                <ul>
+                    {% for ac in object.planes.all %}
+                        <li> {{ ac }} </li>
+                    {% endfor %}
+                </ul>
+            </li>
             <li>Defect: {{ object.defect }}</li>
         </ul>
         <h5 class="mt-3">Steps</h5>
@@ -59,6 +65,9 @@
                     </div>
                 </div>
             </div>
+        {% empty %}
+            No materials required
         {% endfor %}
+        
     </div>
 {% endblock content %}

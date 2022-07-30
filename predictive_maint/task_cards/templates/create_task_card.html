@@ -3,6 +3,7 @@
     <h4 align="center">Task card creation</h4>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        
         {% include 'partials/task_card_form.html' %}
         <hr class="mt-3">
         <h4 align="center" class="mt-3">TBS Steps</h4>

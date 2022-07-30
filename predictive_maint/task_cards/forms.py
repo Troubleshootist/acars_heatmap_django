@@ -2,7 +2,6 @@ from django import forms
 from datetime import datetime
 
 from .models import *
-
 class CreateTaskCardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
        super(CreateTaskCardForm, self).__init__(*args, **kwargs)
@@ -11,10 +10,13 @@ class CreateTaskCardForm(forms.ModelForm):
         model = TaskCard
         fields = '__all__'
         widgets = {
-            'defect': forms.Select(attrs={'style': 'width: 150px'}),
+            'defect': forms.Select(attrs={'style': 'width: 70%'}),
             'description': forms.TextInput(attrs={'style': 'width: 100%'}),
+            'planes': forms.CheckboxSelectMultiple(attrs={
+                "class" : 'col',
+            })
         }
-
+  
 class CreateStepForm(forms.ModelForm):
     class Meta:
         model = TaskCardStep

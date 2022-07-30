@@ -23,6 +23,7 @@ class TaskCard(models.Model):
     ata_chapter = models.CharField(max_length=20, blank=True, null=True, validators=[latex_sym_validator])
     issued_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     plane_type = models.ForeignKey('msgs.PlaneType', on_delete=models.DO_NOTHING, blank=True, null=True)
+    planes = models.ManyToManyField('msgs.Plane', related_name='task_cards')
     defect = models.ForeignKey('defects.Defect', on_delete=models.DO_NOTHING, related_name='task_card', blank=True, null=True)
 
     def __str__(self):

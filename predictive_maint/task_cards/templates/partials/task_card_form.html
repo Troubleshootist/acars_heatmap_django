@@ -1,27 +1,37 @@
 <div class="row mt-3 mb-3">
     {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
-    <div class="col-3">
+    <div class="col-md-4">
         {{ form.number.label_tag }}
         {{ form.number }}
+        {{ form.number.errors }}
     </div>
    
-    <div class="col-3">
+    <div class="col-md-4">
         {{ form.ata_chapter.label_tag }}
         {{ form.ata_chapter }}
+        {{ form.ata_chapter.errors }}
     </div>
-    <div class="col-2">
+    {% comment %} <div class="col-2">
         {{ form.plane_type.label_tag }}
         {{ form.plane_type }}
-    </div>
-    <div class="col-4">
+        {{ form.plane_type.errors}}
+    </div> {% endcomment %}
+    <div class="col-md-4">
         {{ form.defect.label_tag }}
         {{ form.defect }}
+        {{ form.defect.errors }}
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
-      {{ form.description.label_tag }}
+    <div class="col-md-12">
+        {{ form.description.label_tag }}
         {{ form.description }}  
+        {{ form.description.errors }}  
     </div>
     
+</div>
+<div class="col-md-4 mt-2" >
+    {{ form.planes.label_tag }}
+    {{ form.planes }}
+    {{ form.planes.errors }} 
 </div>

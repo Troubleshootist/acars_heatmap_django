@@ -29,7 +29,6 @@ def task_card_print(pk):
         'task_card': task_card,
         'number': task_card.number,
         'description': task_card.description,
-        'ac_type': task_card.plane_type.type,
         'defect_ref': task_card.defect.reference if task_card.defect else 'N/A',
         'down_time': task_card.steps.aggregate(sum=Sum('manhours'))['sum']
     }

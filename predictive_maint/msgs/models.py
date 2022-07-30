@@ -111,7 +111,7 @@ class Plane(models.Model):
         db_table = 'plane'
 
     def __str__(self) -> str:
-        return f'{self.tail}, {self.airline_group}'
+        return f'{self.tail} ({self.type}), {self.airline_group}'
 
 
 class PlaneType(models.Model):
